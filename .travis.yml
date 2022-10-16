@@ -11,7 +11,17 @@ script:
   - docker run -e CI=true shreyp08/fibb-calc npm run test -- --coverage
 
 after_success:
+# Creating images for different components
   - docker build -t shreyp08/multi-client ./client
   - docker build -t shreyp08/multi-nginx ./nginx
   - docker build -t shreyp08/multi-server ./server
   - docker build -t shreyp08/multi-worker ./worker
+
+# Login to the docker CLI
+  - echo "$Docker_Password" | docker login -u "$Docker_ID" --password-stdin
+
+# Push the built images to Docker Hub
+  - docker push shreyp08/multi-client
+  - docker push shreyp08/multi-nginx
+  - docker push shreyp08/multi-server
+  - docker push shreyp08/multi-worker
